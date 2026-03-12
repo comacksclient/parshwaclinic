@@ -1,4 +1,4 @@
-import React from 'react';
+
 import { Facebook, Instagram, MapPin, Phone, Mail, Clock, ArrowRight } from 'lucide-react';
 import Link from 'next/link';
 
