@@ -5,10 +5,12 @@ import { ArrowUpRight, Clock, Heart, Sparkles, User, Star, MessageSquare, ArrowR
 import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
 
-// Stable, optimized Unsplash URLs
-const HERO_IMG = "https://images.unsplash.com/photo-1600170311833-c2cf5280ce49?auto=format&fit=crop&q=80&w=1200";
-const DOC_FEMALE = "https://images.unsplash.com/photo-1675526607070-f5cbd71dde92?auto=format&fit=crop&q=80&w=600";
-const DOC_MALE_1 = "https://images.unsplash.com/photo-1607378119679-1b10e82b3704?auto=format&fit=crop&q=80&w=600";
+// Stable, optimized doctor images for brand trust
+const HERO_IMG = "/image.png"; // Dr. Shrenik Shah
+
+const HERO_SECONDARY = "https://images.unsplash.com/photo-1675526607070-f5cbd71dde92?auto=format&fit=crop&q=80&w=600"; // Dr. Dimple Shah
+const DOC_FEMALE = "/";
+const DOC_MALE_1 = "/";
 const SRV_IMPLANT = "https://images.unsplash.com/photo-1628177142898-93e36e4e3a50?auto=format&fit=crop&q=80&w=600";
 const SRV_WHITENING = "https://images.unsplash.com/photo-1588776814546-1ffcf47267a5?auto=format&fit=crop&q=80&w=600";
 const SRV_BRACES = "https://images.unsplash.com/photo-1598256989800-fe5f95da9787?auto=format&fit=crop&q=80&w=600";
@@ -28,12 +30,37 @@ const fadeInUp = {
     visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: customEase } }
 };
 
+const revealText = {
+    hidden: { y: "100%" },
+    visible: { y: 0, transition: { duration: 1, ease: customEase } }
+};
+
 const staggerContainer = {
     hidden: { opacity: 0 },
     visible: { opacity: 1, transition: { staggerChildren: 0.12 } }
 };
 
-function Hero() {
+// Infinite Marquee Component
+const Marquee = () => {
+    const text = "• Advanced Implantology • Cosmetic Dentistry • Invisible Aligners • Painless Root Canals • Pediatric Care ";
+    return (
+        <div className="w-full bg-[#1A1A1A] text-[#AEE9F5] py-4 overflow-hidden relative rotate-[-1deg] scale-105 z-20 mt-12 md:mt-24 shadow-2xl">
+            <motion.div
+                animate={{ x: [0, -1000] }}
+                transition={{ repeat: Infinity, ease: "linear", duration: 20 }}
+                className="whitespace-nowrap flex text-sm md:text-base font-black uppercase tracking-[0.2em]"
+            >
+                {/* Repeat text multiple times to ensure continuous flow */}
+                <span>{text}</span>
+                <span>{text}</span>
+                <span>{text}</span>
+                <span>{text}</span>
+            </motion.div>
+        </div>
+    );
+};
+
+export function Hero() {
     const [mounted, setMounted] = useState(false);
     const [time, setTime] = useState(new Date());
 
@@ -44,131 +71,123 @@ function Hero() {
     }, []);
 
     return (
-        <section className="w-full px-4 md:px-8 py-8 md:py-12 bg-[#FAFAFC] overflow-hidden relative">
-            {/* Ambient Background Glows */}
-            <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                <motion.div
-                    animate={{ x: [0, 50, 0], y: [0, 30, 0], scale: [1, 1.1, 1] }}
-                    transition={{ duration: 15, repeat: Infinity, ease: "easeInOut" }}
-                    className="absolute -top-[10%] -left-[10%] w-[500px] h-[500px] bg-[#AEE9F5] rounded-full blur-[140px] opacity-40"
+        <section className="w-full min-h-screen flex flex-col relative overflow-hidden bg-white">
+
+            {/* Full Width Background Image */}
+            <div className="absolute inset-0 z-0">
+                <motion.img
+                    initial={{ scale: 1.05 }}
+                    animate={{ scale: 1 }}
+                    transition={{ duration: 2, ease: "easeOut" }}
+                    src={HERO_IMG}
+                    alt="Dr. Shrenik Shah - Parshwa Dental Clinic"
+                    className="w-full h-full object-cover object-[75%_top] lg:object-[center_top]"
                 />
+
+                {/* Bright, frosted gradient to ensure dark text readability on the left.
+                  Fades to completely transparent on the right so the image is crisp.
+                */}
+                <div className="absolute inset-0 bg-gradient-to-r from-white/95 via-white/80 to-transparent lg:w-[65%] z-10 backdrop-blur-[2px]"></div>
             </div>
 
-            <div className="max-w-[1400px] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 relative z-10">
-                {/* Left Content Area */}
-                <div className="lg:col-span-12 xl:col-span-7 flex flex-col justify-between gap-12 pt-8 lg:pt-16">
-                    <motion.div initial="hidden" animate="visible" variants={staggerContainer}>
-                        <motion.div variants={fadeInUp} className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white border border-gray-200 text-[#1A1A1A] text-[10px] md:text-xs font-black tracking-[0.2em] uppercase mb-8 shadow-sm">
-                            <span className="w-2 h-2 rounded-full bg-[#AEE9F5] animate-pulse" />
-                            Premium Dental Clinic
-                        </motion.div>
-                        <motion.h1 variants={fadeInUp} className="text-6xl md:text-8xl xl:text-[7.5rem] font-black text-[#1A1A1A] leading-[0.88] tracking-tighter mb-8">
-                            Design Your <br />
-                            <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#1A1A1A] via-gray-400 to-[#1A1A1A] bg-[length:200%_auto] animate-gradient-x">
-                                Perfect Smile.
-                            </span>
-                        </motion.h1>
-                        <motion.p variants={fadeInUp} className="text-gray-500 text-lg md:text-xl max-w-lg leading-relaxed font-medium">
-                            Experience world-class dental care in Sabarmati. Advanced technology meets compassionate treatment for a truly painless experience.
-                        </motion.p>
-                    </motion.div>
+            <div className="flex-1 flex items-center max-w-[1400px] w-full mx-auto px-4 md:px-8 relative z-20 pt-32 pb-16">
+                <div className="w-full grid grid-cols-1 lg:grid-cols-12 gap-8">
 
-                    <motion.div
-                        initial={{ opacity: 0, y: 30 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.5, duration: 0.8, ease: customEase }}
-                        className="grid grid-cols-1 sm:grid-cols-2 gap-5 mt-auto"
-                    >
-                        {/* Glassmorphism Hours Card */}
-                        <div className="bg-white/60 backdrop-blur-xl p-8 rounded-[40px] flex flex-col justify-between min-h-[220px] group border border-white shadow-[0_8px_32px_rgba(0,0,0,0.04)] hover:shadow-[0_20px_48px_rgba(0,0,0,0.08)] transition-all duration-500">
-                            <div>
-                                <div className="flex items-center justify-between mb-8">
-                                    <div className="flex items-center gap-4">
-                                        <div className="w-12 h-12 rounded-2xl bg-[#1A1A1A] flex items-center justify-center shadow-lg group-hover:scale-110 group-hover:rotate-3 transition-transform duration-500">
-                                            <Clock className="w-5 h-5 text-white" />
-                                        </div>
-                                        <h3 className="font-black text-xl text-[#1A1A1A] tracking-tight">Open Today</h3>
-                                    </div>
-                                    {mounted && (
-                                        <span className="text-[10px] font-black text-[#1A1A1A] bg-white px-3 py-1.5 rounded-full border border-gray-100 uppercase tracking-widest shadow-sm">
-                                            {time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                                        </span>
-                                    )}
-                                </div>
-                                <div className="space-y-4">
-                                    <div className="flex justify-between items-center px-2">
-                                        <span className="font-bold text-sm text-gray-400 uppercase tracking-widest">Mon – Sat</span>
-                                        <div className="flex flex-col items-end">
-                                            <span className="font-black text-[#1A1A1A]">10AM – 2PM</span>
-                                            <span className="font-black text-[#1A1A1A]">5PM – 9PM</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                    {/* Left Side - Main Content Area */}
+                    <div className="lg:col-span-7 flex flex-col justify-center gap-8 lg:pr-10">
+                        <motion.div initial="hidden" animate="visible" variants={staggerContainer} className="relative z-10">
 
-                        {/* Dark Mode CTA Card */}
-                        <Link href="/book-appointment" className="group bg-[#1A1A1A] p-8 rounded-[40px] flex flex-col justify-between min-h-[220px] relative overflow-hidden transition-all duration-500 hover:shadow-[0_30px_60px_rgba(26,26,26,0.3)] hover:-translate-y-1 cursor-pointer">
-                            <div className="absolute top-0 right-0 w-64 h-64 bg-[#AEE9F5]/20 rounded-full blur-3xl group-hover:bg-[#AEE9F5]/40 transition-colors duration-700 -mr-20 -mt-20" />
-
-                            <div className="flex justify-between items-start w-full relative z-10">
-                                <span className="px-4 py-1.5 bg-white/10 backdrop-blur-md rounded-full text-white/90 text-[10px] font-black uppercase tracking-[0.2em] border border-white/10">Quick Connect</span>
-                                <div className="w-14 h-14 bg-[#AEE9F5] rounded-full flex items-center justify-center z-10 group-hover:rotate-[45deg] transition-transform duration-700 group-hover:scale-110 shadow-[0_10px_20px_rgba(174,233,245,0.3)]">
-                                    <ArrowUpRight className="w-6 h-6 text-[#1A1A1A]" />
-                                </div>
-                            </div>
-
-                            <div className="z-10 mt-6">
-                                <span className="text-3xl md:text-4xl font-black text-white leading-[1.1] tracking-tight block group-hover:translate-x-2 transition-transform duration-500">
-                                    Secure your <br />
-                                    <span className="text-[#AEE9F5]">Session</span>
+                            <motion.div variants={fadeInUp} className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full bg-white/60 backdrop-blur-md border border-gray-100 text-[#1A1A1A] text-[10px] font-black tracking-[0.2em] uppercase mb-6 shadow-sm">
+                                <span className="relative flex h-2 w-2">
+                                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#AEE9F5] opacity-75"></span>
+                                    <span className="relative inline-flex rounded-full h-2 w-2 bg-[#AEE9F5]"></span>
                                 </span>
-                            </div>
-                        </Link>
-                    </motion.div>
-                </div>
+                                Premium Dental Clinic
+                            </motion.div>
 
-                {/* Right Image Area (Desktop) */}
-                <div className="xl:col-span-5 h-[800px] relative hidden xl:block">
-                    <motion.div
-                        initial={{ opacity: 0, scale: 0.95 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        transition={{ duration: 1.2, ease: customEase }}
-                        className="w-full h-full rounded-[60px] overflow-hidden relative shadow-[0_40px_100px_rgba(0,0,0,0.08)] border-[8px] border-white group"
-                    >
-                        <img src={HERO_IMG} alt="Clinic Reception" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-[3s] ease-out" />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/10 to-transparent opacity-60"></div>
-
-                        {/* Floating Trust Badge */}
-                        <motion.div
-                            initial={{ opacity: 0, y: 30 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: 1, duration: 0.8, ease: customEase }}
-                            className="absolute bottom-10 left-10 right-10 bg-white/80 backdrop-blur-2xl p-6 rounded-[32px] shadow-2xl border border-white"
-                        >
-                            <div className="flex items-center justify-between mb-4">
-                                <div className="flex -space-x-3">
-                                    <img src={DOC_FEMALE} className="w-12 h-12 rounded-full border-[3px] border-white object-cover shadow-sm" alt="Patient" />
-                                    <img src={DOC_MALE_1} className="w-12 h-12 rounded-full border-[3px] border-white object-cover shadow-sm" alt="Patient" />
-                                    <div className="w-12 h-12 rounded-full bg-[#1A1A1A] border-[3px] border-white flex items-center justify-center text-[10px] text-white font-black shadow-sm">+5k</div>
-                                </div>
-                                <div className="flex gap-1 text-[#1A1A1A]">
-                                    {[...Array(5)].map((_, i) => <Star key={i} className="w-4 h-4 fill-current" />)}
-                                </div>
+                            <div className="overflow-hidden mb-1">
+                                <motion.h1 variants={revealText} className="text-5xl md:text-7xl xl:text-[6.5rem] font-black text-[#1A1A1A] leading-[0.9] tracking-tighter">
+                                    Design Your
+                                </motion.h1>
                             </div>
-                            <p className="text-lg text-[#1A1A1A] font-black leading-tight tracking-tight">
-                                Trusted by 5,000+ happy <br />
-                                <span className="text-gray-500 font-medium tracking-normal">patients across the state.</span>
-                            </p>
+                            <div className="overflow-hidden mb-6">
+                                <motion.h1 variants={revealText} className="text-5xl md:text-7xl xl:text-[6.5rem] font-black leading-[0.9] tracking-tighter">
+                                    <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#1A1A1A] via-gray-600 to-[#0EA5E9] bg-[length:200%_auto] animate-gradient-x">
+                                        Perfect Smile.
+                                    </span>
+                                </motion.h1>
+                            </div>
+
+                            <motion.p variants={fadeInUp} className="text-gray-600 text-base md:text-lg max-w-md leading-relaxed font-medium mb-8">
+                                Experience world-class dental care in Sabarmati. Advanced technology meets compassionate treatment for a truly painless experience.
+                            </motion.p>
                         </motion.div>
-                    </motion.div>
-                </div>
 
-                {/* Mobile Image */}
-                <div className="lg:hidden h-[400px] w-full rounded-[40px] overflow-hidden shadow-2xl relative mt-4 border-[6px] border-white">
-                    <img src={HERO_IMG} alt="Clinic Reception" className="w-full h-full object-cover" />
+                        <motion.div
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: 0.5, duration: 0.8, ease: customEase }}
+                            className="grid grid-cols-1 sm:grid-cols-2 gap-4"
+                        >
+                            {/* Glassmorphism Hours Card (Light Theme) */}
+                            <div className="bg-white/70 backdrop-blur-2xl p-6 rounded-[32px] flex flex-col justify-between min-h-[180px] group border border-white shadow-[0_10px_40px_rgba(0,0,0,0.06)] hover:bg-white/90 transition-all duration-500 hover:-translate-y-1">
+                                <div>
+                                    <div className="flex items-center justify-between mb-6">
+                                        <div className="flex items-center gap-3">
+                                            <div className="w-10 h-10 rounded-[14px] bg-[#FAFAFC] border border-gray-100 flex items-center justify-center group-hover:scale-110 group-hover:rotate-[10deg] transition-all duration-500 shadow-sm">
+                                                <Clock className="w-4 h-4 text-[#0EA5E9]" />
+                                            </div>
+                                            <h3 className="font-black text-lg text-[#1A1A1A] tracking-tight">Open Today</h3>
+                                        </div>
+                                        {mounted && (
+                                            <span className="text-[10px] font-black text-[#0EA5E9] bg-[#0EA5E9]/10 px-2.5 py-1 rounded-full uppercase tracking-widest">
+                                                {time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                            </span>
+                                        )}
+                                    </div>
+                                    <div className="space-y-3">
+                                        <div className="flex justify-between items-center px-1">
+                                            <span className="font-bold text-[11px] text-gray-500 uppercase tracking-widest">Mon – Sat</span>
+                                            <div className="flex flex-col items-end">
+                                                <span className="font-black text-sm text-[#1A1A1A]">10AM – 2PM</span>
+                                                <span className="font-black text-sm text-[#1A1A1A]">5PM – 9PM</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Dark CTA Card */}
+                            <Link href="/book-appointment" className="group bg-[#1A1A1A] p-6 rounded-[32px] flex flex-col justify-between min-h-[180px] relative overflow-hidden transition-all duration-500 hover:shadow-[0_20px_40px_rgba(26,26,26,0.25)] hover:-translate-y-1 cursor-pointer">
+                                {/* Subtle Grid Pattern Background */}
+                                <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]"></div>
+
+                                <div className="absolute top-0 right-0 w-48 h-48 bg-[#AEE9F5]/20 rounded-full blur-2xl group-hover:bg-[#AEE9F5]/30 transition-colors duration-700 -mr-12 -mt-12" />
+
+                                <div className="flex justify-between items-start w-full relative z-10">
+                                    <span className="px-3 py-1.5 bg-white/10 backdrop-blur-md rounded-full text-white/90 text-[9px] font-black uppercase tracking-[0.2em] border border-white/10">Priority Booking</span>
+                                    <div className="w-10 h-10 bg-[#AEE9F5] rounded-full flex items-center justify-center z-10 group-hover:rotate-[45deg] transition-transform duration-700 group-hover:scale-110 shadow-[0_5px_15px_rgba(174,233,245,0.3)]">
+                                        <ArrowUpRight className="w-5 h-5 text-[#1A1A1A]" />
+                                    </div>
+                                </div>
+
+                                <div className="z-10 mt-4 relative">
+                                    <span className="text-2xl md:text-3xl font-black text-white leading-[1.1] tracking-tight block group-hover:translate-x-1.5 transition-transform duration-500">
+                                        Secure your <br />
+                                        <span className="text-[#AEE9F5]">Session.</span>
+                                    </span>
+                                </div>
+                            </Link>
+                        </motion.div>
+                    </div>
+
+
+
                 </div>
             </div>
+
+            {/* The Infinite Scrolling Marquee */}
+            <Marquee />
         </section>
     );
 }
@@ -332,9 +351,9 @@ function Services() {
 
 function Testimonials() {
     const reviews = [
-        { name: "Jeremy Curry", rating: 5, image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=100", text: "I've always been anxious about visiting the dentist, but when I walked into Parshwa Dental Clinic, I felt completely at ease." },
-        { name: "Helena Erickson", rating: 5, image: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=100", text: "I had been putting off my check-up for years due to bad past experiences. The team here completely changed that!" },
-        { name: "Beatrice Cox", rating: 5, image: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&q=80&w=100", text: "After years of being self-conscious about my smile, I decided to get veneers. The results are incredibly natural." }
+        { name: "Mayuri Suthar", rating: 5, text: "Under Dr Shrenik's treatment I had to remove 11 front teeth in 2015 due to pyria. Till date I found no issues in my new bridge. I truly recommend for his treatment. For me he is one of the God gift. 🙏👍" },
+        { name: "Mahi Shah", rating: 5, text: "Dr. Shrenik Shah is a very knowledgeable and experienced dental consultant. We live in USA but always wait for our India visit to have our treatment done with Dr. Shrenik and Dr. Dimple - Excellent treatment and great clinic facility." },
+        { name: "Krunal Shah", rating: 5, text: "Excellent. V good treatment by highly experienced doctor. 👍" }
     ];
 
     return (
@@ -378,7 +397,6 @@ function Testimonials() {
                             </div>
                             <div className="flex items-center gap-5 pt-8 border-t border-gray-200 mt-auto relative z-10">
                                 <div className="relative">
-                                    <img src={review.image} alt={review.name} className="w-16 h-16 rounded-full object-cover shadow-sm border-[3px] border-white group-hover:scale-105 transition-transform duration-500" />
                                     <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-[#AEE9F5] rounded-full border-2 border-white flex items-center justify-center shadow-sm">
                                         <ShieldCheck className="w-3 h-3 text-[#1A1A1A]" />
                                     </div>

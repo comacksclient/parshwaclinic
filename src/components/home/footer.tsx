@@ -9,15 +9,13 @@ export const Footer = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-12 mb-20 border-b border-white/10 pb-12">
                     {/* Brand Column */}
                     <div className="lg:col-span-4 flex flex-col gap-8">
-                        <Link href="/" className="flex items-center gap-3 group w-fit">
-                            {/* Custom Logo SVG - White Version */}
-                            <div className="relative w-12 h-12">
-                                <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
-                                    <circle cx="20" cy="20" r="20" className="fill-white" />
-                                    <path d="M12 15C12 10.5817 15.5817 7 20 7C24.4183 7 28 10.5817 28 15V16.5C28 19.5 26.5 22 24 23.5L20 26L16 23.5C13.5 22 12 19.5 12 16.5V15Z" className="fill-[#1A1A1A]" />
-                                    <path d="M15 15H25" className="stroke-[#AEE9F5] stroke-2 stroke-linecap-round" />
-                                    <path d="M20 12V18" className="stroke-[#AEE9F5] stroke-2 stroke-linecap-round" />
-                                </svg>
+                        <Link href="/" className="flex items-center gap-4 group w-fit">
+                            <div className="relative w-14 h-14">
+                                <img
+                                    src="/parlogo.png"
+                                    alt="Parshwa Dental Logo"
+                                    className="w-full h-full object-contain brightness-0 invert"
+                                />
                             </div>
                             <div className="flex flex-col justify-center">
                                 <span className="text-2xl font-extrabold text-white leading-none tracking-tight">Parshwa</span>
@@ -44,7 +42,7 @@ export const Footer = () => {
                             <li><Link href="/" className="hover:text-[#AEE9F5] transition-colors flex items-center gap-2"><ArrowRight className="w-3 h-3" /> Home</Link></li>
                             <li><Link href="/about" className="hover:text-[#AEE9F5] transition-colors flex items-center gap-2"><ArrowRight className="w-3 h-3" /> About Us</Link></li>
                             <li><Link href="/services" className="hover:text-[#AEE9F5] transition-colors flex items-center gap-2"><ArrowRight className="w-3 h-3" /> Our Services</Link></li>
-                            <li><Link href="/why-us" className="hover:text-[#AEE9F5] transition-colors flex items-center gap-2"><ArrowRight className="w-3 h-3" /> Why Us</Link></li>
+                            <li><Link href="/forpatients" className="hover:text-[#AEE9F5] transition-colors flex items-center gap-2"><ArrowRight className="w-3 h-3" /> For Patients</Link></li>
                             <li><Link href="/gallery" className="hover:text-[#AEE9F5] transition-colors flex items-center gap-2"><ArrowRight className="w-3 h-3" /> Gallery</Link></li>
                             <li><Link href="/contact" className="hover:text-[#AEE9F5] transition-colors flex items-center gap-2"><ArrowRight className="w-3 h-3" /> Contact</Link></li>
                         </ul>

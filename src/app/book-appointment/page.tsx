@@ -112,7 +112,7 @@ const BookAppointmentPage = () => {
                                                     <div className="absolute inset-y-0 left-0 pl-5 flex items-center pointer-events-none">
                                                         <User className="w-5 h-5 text-gray-400 group-focus-within:text-[#AEE9F5] transition-colors" />
                                                     </div>
-                                                    <input required type="text" className="w-full bg-[#FAFAFC] border border-gray-100 rounded-[24px] pl-14 pr-6 py-4 text-[#1A1A1A] font-bold focus:outline-none focus:border-[#AEE9F5] focus:ring-4 focus:ring-[#AEE9F5]/20 transition-all duration-300" placeholder="Jane" />
+                                                    <input required type="text" className="w-full bg-[#FAFAFC] border border-gray-100 rounded-[24px] pl-14 pr-6 py-4 text-[#1A1A1A] font-bold focus:outline-none focus:border-[#AEE9F5] focus:ring-4 focus:ring-[#AEE9F5]/20 transition-all duration-300" placeholder="Rajat" />
                                                 </div>
                                             </div>
                                             {/* Last Name */}
@@ -122,7 +122,7 @@ const BookAppointmentPage = () => {
                                                     <div className="absolute inset-y-0 left-0 pl-5 flex items-center pointer-events-none">
                                                         <User className="w-5 h-5 text-gray-400 group-focus-within:text-[#AEE9F5] transition-colors" />
                                                     </div>
-                                                    <input required type="text" className="w-full bg-[#FAFAFC] border border-gray-100 rounded-[24px] pl-14 pr-6 py-4 text-[#1A1A1A] font-bold focus:outline-none focus:border-[#AEE9F5] focus:ring-4 focus:ring-[#AEE9F5]/20 transition-all duration-300" placeholder="Doe" />
+                                                    <input required type="text" className="w-full bg-[#FAFAFC] border border-gray-100 rounded-[24px] pl-14 pr-6 py-4 text-[#1A1A1A] font-bold focus:outline-none focus:border-[#AEE9F5] focus:ring-4 focus:ring-[#AEE9F5]/20 transition-all duration-300" placeholder="Sharma" />
                                                 </div>
                                             </div>
                                         </div>
@@ -213,6 +213,18 @@ const BookAppointmentPage = () => {
 
                 </div>
             </div>
+
+            {/* Google Maps Section */}
+            <motion.div
+                initial={{ opacity: 0, y: 40 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.5, duration: 1, ease: customEase }}
+                className="max-w-[1400px] mx-auto px-4 md:px-8 mt-24"
+            >
+                <div className="w-full h-[450px] rounded-[48px] overflow-hidden border border-gray-100 shadow-[0_40px_100px_rgba(0,0,0,0.04)]">
+                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d117469.46710991734!2d72.51171447868013!3d23.063363291353383!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x395e8324ecf42d25%3A0x6adc73eacbd4d770!2sParshwa%20Dental%20Clinic%20%23Dr%20Shrenik%20shah%20%23Dr%20Dimple%20shah!5e0!3m2!1sen!2sin!4v1773425366462!5m2!1sen!2sin" width="100%" height="100%" loading="lazy" ></iframe>
+                </div>
+            </motion.div>
         </main>
     );
 };

@@ -72,7 +72,7 @@ const ContactPage = () => {
 
                                 <motion.div variants={staggerContainer} className="flex flex-col gap-10 text-white">
                                     {/* Location */}
-                                    <motion.a href="https://maps.google.com" target="_blank" rel="noreferrer" variants={fadeInUp} className="flex gap-6 items-start group cursor-pointer">
+                                    <motion.a href="https://maps.app.goo.gl/YourGoogleMapsLinkHere" target="_blank" rel="noreferrer" variants={fadeInUp} className="flex gap-6 items-start group cursor-pointer">
                                         <div className="w-14 h-14 rounded-[20px] bg-white/5 border border-white/10 flex items-center justify-center shrink-0 group-hover:bg-[#AEE9F5] group-hover:scale-110 transition-all duration-500">
                                             <MapPin className="w-6 h-6 text-[#AEE9F5] group-hover:text-[#1A1A1A] transition-colors" />
                                         </div>
@@ -138,7 +138,7 @@ const ContactPage = () => {
                                                         <div className="absolute inset-y-0 left-0 pl-5 flex items-center pointer-events-none">
                                                             <User className="w-5 h-5 text-gray-400 group-focus-within:text-[#1A1A1A] transition-colors" />
                                                         </div>
-                                                        <input required type="text" className="w-full bg-[#FAFAFC] border border-gray-100 rounded-[24px] pl-14 pr-6 py-4 text-[#1A1A1A] font-bold focus:outline-none focus:border-[#1A1A1A] focus:ring-4 focus:ring-gray-100 transition-all duration-300" placeholder="John Doe" />
+                                                        <input required type="text" className="w-full bg-[#FAFAFC] border border-gray-100 rounded-[24px] pl-14 pr-6 py-4 text-[#1A1A1A] font-bold focus:outline-none focus:border-[#1A1A1A] focus:ring-4 focus:ring-gray-100 transition-all duration-300" placeholder="Rajat Sharma" />
                                                     </div>
                                                 </div>
 
@@ -149,7 +149,7 @@ const ContactPage = () => {
                                                         <div className="absolute inset-y-0 left-0 pl-5 flex items-center pointer-events-none">
                                                             <AtSign className="w-5 h-5 text-gray-400 group-focus-within:text-[#1A1A1A] transition-colors" />
                                                         </div>
-                                                        <input required type="email" className="w-full bg-[#FAFAFC] border border-gray-100 rounded-[24px] pl-14 pr-6 py-4 text-[#1A1A1A] font-bold focus:outline-none focus:border-[#1A1A1A] focus:ring-4 focus:ring-gray-100 transition-all duration-300" placeholder="john@example.com" />
+                                                        <input required type="email" className="w-full bg-[#FAFAFC] border border-gray-100 rounded-[24px] pl-14 pr-6 py-4 text-[#1A1A1A] font-bold focus:outline-none focus:border-[#1A1A1A] focus:ring-4 focus:ring-gray-100 transition-all duration-300" placeholder="rajat@example.com" />
                                                     </div>
                                                 </div>
 
@@ -203,6 +203,32 @@ const ContactPage = () => {
 
                     </div>
                 </motion.div>
+
+                {/* Google Maps Section - Premium Integration */}
+                <motion.div
+                    initial={{ opacity: 0, y: 40 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, margin: "-100px" }}
+                    transition={{ duration: 1, ease: customEase }}
+                    className="mt-12 md:mt-24 w-full h-[450px] md:h-[550px] rounded-[48px] md:rounded-[60px] overflow-hidden border border-gray-200 shadow-[0_30px_80px_rgba(0,0,0,0.06)] relative group"
+                >
+                    {/* Optional overlay that disappears on hover to keep the map interactive */}
+                    <div className="absolute inset-0 bg-black/5 pointer-events-none group-hover:opacity-0 transition-opacity duration-500 z-10" />
+
+                    {/* The actual iframe pointing to Parshwa Dental Clinic's general area */}
+                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d117469.46710991734!2d72.51171447868013!3d23.063363291353383!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x395e8324ecf42d25%3A0x6adc73eacbd4d770!2sParshwa%20Dental%20Clinic%20%23Dr%20Shrenik%20shah%20%23Dr%20Dimple%20shah!5e0!3m2!1sen!2sin!4v1773425366462!5m2!1sen!2sin" width="100%" height="100%" loading="lazy" ></iframe>
+
+                    {/* "Get Directions" Floating Button */}
+                    <a
+                        href="https://maps.app.goo.gl/1RWCE7tsh1mLqPmE6"
+                        target="_blank"
+                        rel="noreferrer"
+                        className="absolute bottom-8 right-8 bg-[#1A1A1A] text-white px-6 py-4 rounded-full font-black text-sm uppercase tracking-widest flex items-center gap-3 z-20 shadow-2xl hover:bg-[#AEE9F5] hover:text-[#1A1A1A] transition-all duration-300 hover:scale-105"
+                    >
+                        Get Directions <ArrowRight className="w-4 h-4" />
+                    </a>
+                </motion.div>
+
             </div>
         </main>
     );
