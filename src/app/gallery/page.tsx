@@ -2,17 +2,17 @@ import React from 'react';
 
 const GalleryPage = () => {
     const images = [
-        "https://images.unsplash.com/photo-1606811841689-23dfddce3e95?auto=format&fit=crop&q=80&w=600",
-        "https://images.unsplash.com/photo-1598256989800-fe5f95da9787?auto=format&fit=crop&q=80&w=600",
-        "https://images.unsplash.com/photo-1628177142898-93e36e4e3a50?auto=format&fit=crop&q=80&w=600",
-        "https://images.unsplash.com/photo-1588776814546-1ffcf47267a5?auto=format&fit=crop&q=80&w=600",
-        "https://images.unsplash.com/photo-1600170311833-c2cf5280ce49?auto=format&fit=crop&q=80&w=600",
-        "https://images.unsplash.com/photo-1609840114035-3c981b782dfe?auto=format&fit=crop&q=80&w=600"
+        "https://lh3.googleusercontent.com/gps-cs-s/AHVAwerbIMwcyy0BPAl_GSffAncZ7U4eR7O2CWJkTrSoa6sFrdyShFfpJ8jz6r8k88bR3-cXmXUWPqSZAggmr7Ub16KJYAfb0EJd9REtCnuM5Hg1z2DWNB7R1mSRFtQMUd1t8nsu4hra=s1360-w1360-h1020-rw",
+        "https://lh3.googleusercontent.com/gps-cs-s/AHVAwerg1lNPfTdZXoQWLqrsw3KcaWfEX6vUqiKN-3bKSw8ooszNGGJnSRQ1RH0eMCd57zihsjD3Rd_GYfeBG9BMQwjbDtRpu7Uvd0qlxhV8iXf_TysFf6DS0H7ddgf8jwijWZ281cx2HQ=s1360-w1360-h1020-rw",
+        "https://lh3.googleusercontent.com/p/AF1QipNyxU3kihy0brPQgumBPCif15wPtQCO0Ln7pN_Q=s1360-w1360-h1020-rw",
+        "https://lh3.googleusercontent.com/p/AF1QipOWM6072jPhQ6ChW2et4q2s744gz7WwsaE0RBbj=s1360-w1360-h1020-rw",
+        "https://lh3.googleusercontent.com/p/AF1QipOpbwh8fmFq3lXASu3Z1id6G-J4D5ld-fD9zqsv=s1360-w1360-h1020-rw",
+        "https://lh3.googleusercontent.com/p/AF1QipPC4zSN1guQMbUuxiOOcnGljHnwaa8QBr7e745X=s1360-w1360-h1020-rw"
     ];
 
     return (
         <main className="min-h-screen bg-gray-50 pt-32 pb-24">
-            <div className="max-w-[1400px] mx-auto px-4 md:px-8">
+            <div className="max-w-[1550px] mx-auto px-4 md:px-8">
                 <div className="mb-20 text-center">
                     <h1 className="text-5xl md:text-7xl font-black text-[#1A1A1A] tracking-tighter leading-[0.9] mb-8">
                         Our <span className="text-transparent bg-clip-text bg-gradient-to-r from-gray-400 to-gray-200">Gallery.</span>

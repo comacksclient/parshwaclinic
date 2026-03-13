@@ -53,14 +53,14 @@ const DOCTORS_DB = {
         id: "dr_shrenik",
         name: "Dr. Shrenik Shah",
         specialty: "Dental Surgeon",
-        image_url: "https://images.unsplash.com/photo-1607378119679-1b10e82b3704?auto=format&fit=crop&q=80&w=600",
+        image_url: "/",
         short_bio: "Expert Dental Surgeon with years of experience in Sabarmati clinic.",
     },
     dr_dimple: {
         id: "dr_dimple",
         name: "Dr. Dimple Shah",
         specialty: "Dental Surgeon",
-        image_url: "https://images.unsplash.com/photo-1675526607070-f5cbd71dde92?auto=format&fit=crop&q=80&w=600",
+        image_url: "/",
         short_bio: "Compassionate Dental Surgeon providing high-quality care in Ahmedabad.",
     },
 };
@@ -360,14 +360,14 @@ function bookingFormNode() {
             text: responseText,
             fields: [
                 {
-                    id: "name",
+                    id: "patientName",
                     label: "Your Name",
                     type: "text",
                     placeholder: "Enter your full name",
                     required: true
                 },
                 {
-                    id: "phone",
+                    id: "phoneNumber",
                     label: "Phone Number",
                     type: "tel",
                     placeholder: "+91 XXXXX XXXXX",
@@ -421,7 +421,7 @@ async function bookingConfirmationNode(state: typeof AgentState.State) {
 
 
     const responseText = name
-        ? `Thanks ${name}! ✅\n\nWe have received your booking request.\n\nOur team will call you at ${phone} shortly to confirm your appointment.\n\n📞 Expect a call during clinic hours (Mon-Sat, 10:00 AM - 2 PM & 5 PM - 9 PM).`
+        ? `Thanks ${name}! \n\nWe have received your booking request.\n\nOur team will call you at ${phone} shortly to confirm your appointment.\n\n📞 Expect a call during clinic hours (Mon-Sat, 10:00 AM - 2 PM & 5 PM - 9 PM).`
         : "Thank you for your interest! Please call us at +91 93288 20346 to book your appointment.";
 
     return {

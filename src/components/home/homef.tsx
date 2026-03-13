@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { ArrowUpRight, Clock, Heart, Sparkles, User, Star, MessageSquare, ArrowRight, Activity, ShieldCheck, Plus, Minus, HelpCircle } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, Variants } from 'framer-motion';
 import Link from 'next/link';
 
 // Stable, optimized doctor images for brand trust
@@ -11,9 +11,9 @@ const HERO_IMG = "/image.png"; // Dr. Shrenik Shah
 const HERO_SECONDARY = "https://images.unsplash.com/photo-1675526607070-f5cbd71dde92?auto=format&fit=crop&q=80&w=600"; // Dr. Dimple Shah
 const DOC_FEMALE = "/";
 const DOC_MALE_1 = "/";
-const SRV_IMPLANT = "https://images.unsplash.com/photo-1628177142898-93e36e4e3a50?auto=format&fit=crop&q=80&w=600";
-const SRV_WHITENING = "https://images.unsplash.com/photo-1588776814546-1ffcf47267a5?auto=format&fit=crop&q=80&w=600";
-const SRV_BRACES = "https://images.unsplash.com/photo-1598256989800-fe5f95da9787?auto=format&fit=crop&q=80&w=600";
+const SRV_IMPLANT = "https://www.perio.org/wp-content/uploads/2020/02/dental-implant.png";
+const SRV_WHITENING = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ9FGc-A0Dru-QTFvuYatq5h37MvELFNf4dqg&s";
+const SRV_BRACES = "https://radiantdentalcare.in/wp-content/uploads/2024/04/What-is-Orthodontic-Treatment-min.png";
 
 // Standardized Button Component with Magnetic-like Feel
 const Button = ({ children, className, ...props }: any) => (
@@ -23,19 +23,19 @@ const Button = ({ children, className, ...props }: any) => (
 );
 
 // High-end Animation Variants
-const customEase = [0.22, 1, 0.36, 1];
+const customEase = [0.22, 1, 0.36, 1] as any;
 
-const fadeInUp = {
+const fadeInUp: Variants = {
     hidden: { opacity: 0, y: 40 },
     visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: customEase } }
 };
 
-const revealText = {
+const revealText: Variants = {
     hidden: { y: "100%" },
     visible: { y: 0, transition: { duration: 1, ease: customEase } }
 };
 
-const staggerContainer = {
+const staggerContainer: Variants = {
     hidden: { opacity: 0 },
     visible: { opacity: 1, transition: { staggerChildren: 0.12 } }
 };
@@ -90,7 +90,7 @@ export function Hero() {
                 <div className="absolute inset-0 bg-gradient-to-r from-white/95 via-white/80 to-transparent lg:w-[65%] z-10 backdrop-blur-[2px]"></div>
             </div>
 
-            <div className="flex-1 flex items-center max-w-[1400px] w-full mx-auto px-4 md:px-8 relative z-20 pt-32 pb-16">
+            <div className="flex-1 flex items-center max-w-[1550px] w-full mx-auto px-4 md:px-8 relative z-20 pt-32 pb-16">
                 <div className="w-full grid grid-cols-1 lg:grid-cols-12 gap-8">
 
                     {/* Left Side - Main Content Area */}
@@ -202,7 +202,7 @@ function Features() {
 
     return (
         <section className="py-24 px-4 md:px-8 bg-[#FAFAFC]">
-            <div className="max-w-[1400px] mx-auto">
+            <div className="max-w-[1550px] mx-auto">
                 <motion.div variants={staggerContainer} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                     {features.map((feature, idx) => (
                         <motion.div key={idx} variants={fadeInUp} className={`${feature.bg} p-10 rounded-[40px] flex flex-col justify-between min-h-[280px] border border-white shadow-[0_8px_30px_rgba(0,0,0,0.03)] hover:shadow-[0_30px_60px_rgba(0,0,0,0.08)] transition-all duration-500 hover:-translate-y-2 group cursor-default relative overflow-hidden`}>
@@ -238,7 +238,7 @@ function Doctors() {
 
     return (
         <section className="py-32 px-4 md:px-8 bg-white relative overflow-hidden">
-            <div className="max-w-[1400px] mx-auto relative z-10">
+            <div className="max-w-[1550px] mx-auto relative z-10">
                 <div className="flex flex-col md:flex-row justify-between items-end mb-20 gap-8">
                     <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeInUp}>
                         <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-gray-200 bg-gray-50 text-[10px] font-black tracking-[0.2em] text-[#1A1A1A] uppercase mb-8 shadow-sm">
@@ -298,7 +298,7 @@ function Services() {
             {/* Dark Mode Background Effects */}
             <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-[#AEE9F5]/5 rounded-full blur-[150px] pointer-events-none" />
 
-            <div className="max-w-[1400px] mx-auto relative z-10">
+            <div className="max-w-[1550px] mx-auto relative z-10">
                 <div className="flex flex-col lg:flex-row justify-between items-start gap-12 mb-28">
                     <div className="max-w-2xl">
                         <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeInUp}>
@@ -358,7 +358,7 @@ function Testimonials() {
 
     return (
         <section className="py-32 px-4 md:px-8 bg-white">
-            <div className="max-w-[1400px] mx-auto">
+            <div className="max-w-[1550px] mx-auto">
                 <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="flex flex-col md:flex-row justify-between items-end mb-24">
                     <div className="max-w-2xl text-center md:text-left">
                         <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-gray-100 bg-gray-50 text-[10px] font-black tracking-[0.2em] text-[#1A1A1A] uppercase mb-8 shadow-sm">
@@ -501,7 +501,7 @@ function FinalCTA() {
                 whileInView={{ scale: 1, opacity: 1 }}
                 viewport={{ once: true }}
                 transition={{ duration: 1, ease: customEase }}
-                className="max-w-[1400px] mx-auto bg-[#1A1A1A] rounded-[60px] md:rounded-[80px] px-6 py-24 md:p-32 text-center relative overflow-hidden shadow-[0_40px_100px_rgba(26,26,26,0.25)]"
+                className="max-w-[1550px] mx-auto bg-[#1A1A1A] rounded-[60px] md:rounded-[80px] px-6 py-24 md:p-32 text-center relative overflow-hidden shadow-[0_40px_100px_rgba(26,26,26,0.25)]"
             >
                 {/* Visual Flair */}
                 <div className="absolute -top-40 -right-40 w-[600px] h-[600px] bg-[#AEE9F5]/20 rounded-full blur-[140px] pointer-events-none" />

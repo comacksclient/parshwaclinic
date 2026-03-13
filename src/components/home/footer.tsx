@@ -5,7 +5,7 @@ import Link from 'next/link';
 export const Footer = () => {
     return (
         <footer className="bg-[#1A1A1A] text-white pt-20 pb-8 px-4 md:px-12 rounded-t-[48px] mt-4">
-            <div className="max-w-[1400px] mx-auto">
+            <div className="max-w-[1550px] mx-auto">
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-12 mb-20 border-b border-white/10 pb-12">
                     {/* Brand Column */}
                     <div className="lg:col-span-4 flex flex-col gap-8">
@@ -100,8 +100,7 @@ export const Footer = () => {
                 <div className="flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-gray-600 font-medium">
                     <p>© {new Date().getFullYear()} Parshwa Dental Clinic. All rights reserved.</p>
                     <div className="flex gap-8">
-                        <a href="#" className="hover:text-white">Privacy Policy</a>
-                        <a href="#" className="hover:text-white">Terms of Service</a>
+                        <a href="https://comaks.in" target="_blank" rel="noreferrer" className="hover:text-[#AEE9F5] transition-colors">Powered by Comaks</a>
                     </div>
                 </div>
             </div>

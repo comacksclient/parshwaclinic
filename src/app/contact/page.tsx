@@ -15,7 +15,7 @@ import {
 } from 'lucide-react';
 
 // High-end Animation Variants
-const customEase = [0.22, 1, 0.36, 1];
+const customEase = [0.22, 1, 0.36, 1] as any;
 
 const fadeInUp = {
     hidden: { opacity: 0, y: 30 },
@@ -30,10 +30,40 @@ const staggerContainer = {
 const ContactPage = () => {
     const [isSubmitted, setIsSubmitted] = useState(false);
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const [error, setError] = useState<string | null>(null);
+    const [isSubmitting, setIsSubmitting] = useState(false);
+
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        // Simulate API call
-        setTimeout(() => setIsSubmitted(true), 600);
+        setIsSubmitting(true);
+        setError(null);
+
+        const formData = new FormData(e.currentTarget);
+        const data = {
+            name: formData.get('name'),
+            email: formData.get('email'),
+            msg: formData.get('message'),
+            subject: "Contact Form Website"
+        };
+
+        try {
+            const response = await fetch('/api/contact', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data),
+            });
+
+            if (response.ok) {
+                setIsSubmitted(true);
+            } else {
+                const errData = await response.json();
+                setError(errData.error || "Failed to send message.");
+            }
+        } catch (err) {
+            setError("Something went wrong. Please try again.");
+        } finally {
+            setIsSubmitting(false);
+        }
     };
 
     return (
@@ -41,7 +71,7 @@ const ContactPage = () => {
             {/* Ambient Background Glows */}
             <div className="absolute top-0 left-0 w-[500px] h-[500px] bg-[#AEE9F5]/20 rounded-full blur-[150px] pointer-events-none -translate-x-1/2 -translate-y-1/2" />
 
-            <div className="max-w-[1400px] mx-auto px-4 md:px-8 relative z-10">
+            <div className="max-w-[1550px] mx-auto px-4 md:px-8 relative z-10">
                 <motion.div
                     initial={{ opacity: 0, y: 40 }}
                     animate={{ opacity: 1, y: 0 }}
@@ -138,7 +168,7 @@ const ContactPage = () => {
                                                         <div className="absolute inset-y-0 left-0 pl-5 flex items-center pointer-events-none">
                                                             <User className="w-5 h-5 text-gray-400 group-focus-within:text-[#1A1A1A] transition-colors" />
                                                         </div>
-                                                        <input required type="text" className="w-full bg-[#FAFAFC] border border-gray-100 rounded-[24px] pl-14 pr-6 py-4 text-[#1A1A1A] font-bold focus:outline-none focus:border-[#1A1A1A] focus:ring-4 focus:ring-gray-100 transition-all duration-300" placeholder="Rajat Sharma" />
+                                                        <input required name="name" type="text" className="w-full bg-[#FAFAFC] border border-gray-100 rounded-[24px] pl-14 pr-6 py-4 text-[#1A1A1A] font-bold focus:outline-none focus:border-[#1A1A1A] focus:ring-4 focus:ring-gray-100 transition-all duration-300" placeholder="Rajat Sharma" />
                                                     </div>
                                                 </div>
 
@@ -149,7 +179,7 @@ const ContactPage = () => {
                                                         <div className="absolute inset-y-0 left-0 pl-5 flex items-center pointer-events-none">
                                                             <AtSign className="w-5 h-5 text-gray-400 group-focus-within:text-[#1A1A1A] transition-colors" />
                                                         </div>
-                                                        <input required type="email" className="w-full bg-[#FAFAFC] border border-gray-100 rounded-[24px] pl-14 pr-6 py-4 text-[#1A1A1A] font-bold focus:outline-none focus:border-[#1A1A1A] focus:ring-4 focus:ring-gray-100 transition-all duration-300" placeholder="rajat@example.com" />
+                                                        <input required name="email" type="email" className="w-full bg-[#FAFAFC] border border-gray-100 rounded-[24px] pl-14 pr-6 py-4 text-[#1A1A1A] font-bold focus:outline-none focus:border-[#1A1A1A] focus:ring-4 focus:ring-gray-100 transition-all duration-300" placeholder="rajat@example.com" />
                                                     </div>
                                                 </div>
 
@@ -160,15 +190,16 @@ const ContactPage = () => {
                                                         <div className="absolute top-5 left-5 pointer-events-none">
                                                             <MessageSquare className="w-5 h-5 text-gray-400 group-focus-within:text-[#1A1A1A] transition-colors" />
                                                         </div>
-                                                        <textarea required rows={4} className="w-full bg-[#FAFAFC] border border-gray-100 rounded-[24px] pl-14 pr-6 py-4 text-[#1A1A1A] font-bold focus:outline-none focus:border-[#1A1A1A] focus:ring-4 focus:ring-gray-100 transition-all duration-300 resize-none" placeholder="How can we help you today?"></textarea>
+                                                        <textarea required name="message" rows={4} className="w-full bg-[#FAFAFC] border border-gray-100 rounded-[24px] pl-14 pr-6 py-4 text-[#1A1A1A] font-bold focus:outline-none focus:border-[#1A1A1A] focus:ring-4 focus:ring-gray-100 transition-all duration-300 resize-none" placeholder="How can we help you today?"></textarea>
                                                     </div>
                                                 </div>
 
                                                 <div className="pt-4">
-                                                    <button type="submit" className="w-full bg-[#1A1A1A] text-white rounded-[24px] py-6 text-lg font-black tracking-wide hover:bg-[#AEE9F5] hover:text-[#1A1A1A] transition-all duration-500 transform active:scale-95 group flex items-center justify-center gap-3 shadow-[0_10px_20px_rgba(26,26,26,0.1)]">
-                                                        Send Message
+                                                    <button type="submit" disabled={isSubmitting} className="w-full bg-[#1A1A1A] text-white rounded-[24px] py-6 text-lg font-black tracking-wide hover:bg-[#AEE9F5] hover:text-[#1A1A1A] transition-all duration-500 transform active:scale-95 group flex items-center justify-center gap-3 shadow-[0_10px_20px_rgba(26,26,26,0.1)] disabled:opacity-50 disabled:cursor-not-allowed">
+                                                        {isSubmitting ? "Sending..." : "Send Message"}
                                                         <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                                                     </button>
+                                                    {error && <p className="text-red-500 text-xs font-bold mt-4 text-center">{error}</p>}
                                                 </div>
                                             </form>
                                         </motion.div>

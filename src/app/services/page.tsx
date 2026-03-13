@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { motion } from 'framer-motion';
+import { motion, Variants } from 'framer-motion';
 import {
     Activity,
     ArrowRight,
@@ -16,7 +16,7 @@ import {
 import Link from 'next/link';
 
 // High-end Animation Variants
-const customEase = [0.22, 1, 0.36, 1];
+const customEase = [0.22, 1, 0.36, 1] as any;
 
 const fadeInUp = {
     hidden: { opacity: 0, y: 40 },
@@ -67,7 +67,7 @@ const ServicesPage = () => {
             {/* Ambient Background Glow */}
             <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-[#AEE9F5]/20 rounded-full blur-[150px] pointer-events-none -z-10 -translate-y-1/2 translate-x-1/3" />
 
-            <div className="max-w-[1400px] mx-auto px-4 md:px-8 relative z-10">
+            <div className="max-w-[1550px] mx-auto px-4 md:px-8 relative z-10">
 
                 {/* Header Section */}
                 <motion.div

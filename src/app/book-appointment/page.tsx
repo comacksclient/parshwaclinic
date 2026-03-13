@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, Variants } from 'framer-motion';
 import {
     Calendar,
     User,
@@ -15,25 +15,90 @@ import {
 } from 'lucide-react';
 
 // High-end Animation Variants
-const customEase = [0.22, 1, 0.36, 1];
+const customEase = [0.22, 1, 0.36, 1] as any;
 
-const fadeInUp = {
+const fadeInUp: Variants = {
     hidden: { opacity: 0, y: 30 },
     visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: customEase } }
 };
 
-const staggerContainer = {
+const staggerContainer: Variants = {
     hidden: { opacity: 0 },
     visible: { opacity: 1, transition: { staggerChildren: 0.1 } }
 };
 
 const BookAppointmentPage = () => {
-    const [isSubmitted, setIsSubmitted] = useState(false);
+    const [formData, setFormData] = useState({
+        name: '',
+        email: '',
+        phone: '',
+        date: '',
+        time: '',
+        service: 'General Consultation',
+        message: ''
+    });
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
+
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        // Simulate API call
-        setTimeout(() => setIsSubmitted(true), 600);
+        setIsSubmitting(true);
+        setSubmitStatus('idle');
+
+        try {
+            // Map frontend fields to Google Script expected names
+            const payload = {
+                patientName: formData.name,
+                phoneNumber: formData.phone,
+                treatmentType: formData.service,
+                preferredDate: formData.date,
+                preferredTimeSlot: formData.time,
+                bookingTimestamp: new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' }),
+                bookingSource: 'Website',
+                appointmentStatus: 'Pending Confirmation',
+                // Keeping original data for backward compatibility if needed
+                email: formData.email,
+                message: formData.message
+            };
+
+            console.log(" Sending booking:", payload);
+
+            const response = await fetch('/api/book', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(payload),
+            });
+
+            console.log(" Response status:", response.status);
+            const result = await response.json();
+            console.log(" Response data:", result);
+
+            if (response.ok) {
+                setSubmitStatus('success');
+                setFormData({
+                    name: '',
+                    email: '',
+                    phone: '',
+                    date: '',
+                    time: '',
+                    service: 'General Consultation',
+                    message: ''
+                });
+                alert("Thank you! We will confirm your appointment shortly.");
+            } else {
+                setSubmitStatus('error');
+                alert("Something went wrong. Please call us at +91 93288 20346");
+            }
+        } catch (error) {
+            console.error(" Booking error:", error);
+            setSubmitStatus('error');
+            alert("Connection error. Please try again or call us at +91 93288 20346");
+        } finally {
+            setIsSubmitting(false);
+        }
     };
 
     return (
@@ -42,7 +107,7 @@ const BookAppointmentPage = () => {
             <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-[#AEE9F5]/20 rounded-full blur-[150px] pointer-events-none -translate-y-1/2 translate-x-1/3" />
             <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-gray-200/50 rounded-full blur-[120px] pointer-events-none -translate-x-1/2 translate-y-1/2" />
 
-            <div className="max-w-[1400px] mx-auto px-4 md:px-8 relative z-10">
+            <div className="max-w-[1550px] mx-auto px-4 md:px-8 relative z-10">
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
 
                     {/* Left Column: Context & Info */}
@@ -94,7 +159,7 @@ const BookAppointmentPage = () => {
                             className="bg-white rounded-[48px] p-8 md:p-12 shadow-[0_40px_100px_rgba(0,0,0,0.04)] border border-gray-100 relative overflow-hidden min-h-[600px] flex flex-col justify-center"
                         >
                             <AnimatePresence mode="wait">
-                                {!isSubmitted ? (
+                                {submitStatus !== 'success' ? (
                                     <motion.form
                                         key="form"
                                         initial={{ opacity: 0 }}
@@ -105,48 +170,58 @@ const BookAppointmentPage = () => {
                                         onSubmit={handleSubmit}
                                     >
                                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                            {/* First Name */}
+                                            {/* Name */}
                                             <div>
-                                                <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2 block pl-2">First Name</label>
+                                                <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2 block pl-2">Full Name</label>
                                                 <div className="relative group">
                                                     <div className="absolute inset-y-0 left-0 pl-5 flex items-center pointer-events-none">
                                                         <User className="w-5 h-5 text-gray-400 group-focus-within:text-[#AEE9F5] transition-colors" />
                                                     </div>
-                                                    <input required type="text" className="w-full bg-[#FAFAFC] border border-gray-100 rounded-[24px] pl-14 pr-6 py-4 text-[#1A1A1A] font-bold focus:outline-none focus:border-[#AEE9F5] focus:ring-4 focus:ring-[#AEE9F5]/20 transition-all duration-300" placeholder="Rajat" />
+                                                    <input
+                                                        required
+                                                        type="text"
+                                                        className="w-full bg-[#FAFAFC] border border-gray-100 rounded-[24px] pl-14 pr-6 py-4 text-[#1A1A1A] font-bold focus:outline-none focus:border-[#AEE9F5] focus:ring-4 focus:ring-[#AEE9F5]/20 transition-all duration-300"
+                                                        placeholder="Rajat Sharma"
+                                                        value={formData.name}
+                                                        onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                                                    />
                                                 </div>
                                             </div>
-                                            {/* Last Name */}
+                                            {/* Email */}
                                             <div>
-                                                <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2 block pl-2">Last Name</label>
+                                                <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2 block pl-2">Email Address</label>
                                                 <div className="relative group">
                                                     <div className="absolute inset-y-0 left-0 pl-5 flex items-center pointer-events-none">
-                                                        <User className="w-5 h-5 text-gray-400 group-focus-within:text-[#AEE9F5] transition-colors" />
+                                                        <Phone className="w-5 h-5 text-gray-400 group-focus-within:text-[#AEE9F5] transition-colors" />
                                                     </div>
-                                                    <input required type="text" className="w-full bg-[#FAFAFC] border border-gray-100 rounded-[24px] pl-14 pr-6 py-4 text-[#1A1A1A] font-bold focus:outline-none focus:border-[#AEE9F5] focus:ring-4 focus:ring-[#AEE9F5]/20 transition-all duration-300" placeholder="Sharma" />
+                                                    <input
+                                                        required
+                                                        type="email"
+                                                        className="w-full bg-[#FAFAFC] border border-gray-100 rounded-[24px] pl-14 pr-6 py-4 text-[#1A1A1A] font-bold focus:outline-none focus:border-[#AEE9F5] focus:ring-4 focus:ring-[#AEE9F5]/20 transition-all duration-300"
+                                                        placeholder="rajat@example.com"
+                                                        value={formData.email}
+                                                        onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                                                    />
                                                 </div>
-                                            </div>
-                                        </div>
-
-                                        {/* Phone Number */}
-                                        <div>
-                                            <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2 block pl-2">Phone Number</label>
-                                            <div className="relative group">
-                                                <div className="absolute inset-y-0 left-0 pl-5 flex items-center pointer-events-none">
-                                                    <Phone className="w-5 h-5 text-gray-400 group-focus-within:text-[#AEE9F5] transition-colors" />
-                                                </div>
-                                                <input required type="tel" className="w-full bg-[#FAFAFC] border border-gray-100 rounded-[24px] pl-14 pr-6 py-4 text-[#1A1A1A] font-bold focus:outline-none focus:border-[#AEE9F5] focus:ring-4 focus:ring-[#AEE9F5]/20 transition-all duration-300" placeholder="+91 00000 00000" />
                                             </div>
                                         </div>
 
                                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                            {/* Preferred Date */}
+                                            {/* Phone Number */}
                                             <div>
-                                                <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2 block pl-2">Preferred Date</label>
+                                                <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2 block pl-2">Phone Number</label>
                                                 <div className="relative group">
                                                     <div className="absolute inset-y-0 left-0 pl-5 flex items-center pointer-events-none">
-                                                        <Calendar className="w-5 h-5 text-gray-400 group-focus-within:text-[#AEE9F5] transition-colors" />
+                                                        <Phone className="w-5 h-5 text-gray-400 group-focus-within:text-[#AEE9F5] transition-colors" />
                                                     </div>
-                                                    <input required type="date" className="w-full bg-[#FAFAFC] border border-gray-100 rounded-[24px] pl-14 pr-6 py-4 text-[#1A1A1A] font-bold focus:outline-none focus:border-[#AEE9F5] focus:ring-4 focus:ring-[#AEE9F5]/20 transition-all duration-300" />
+                                                    <input
+                                                        required
+                                                        type="tel"
+                                                        className="w-full bg-[#FAFAFC] border border-gray-100 rounded-[24px] pl-14 pr-6 py-4 text-[#1A1A1A] font-bold focus:outline-none focus:border-[#AEE9F5] focus:ring-4 focus:ring-[#AEE9F5]/20 transition-all duration-300"
+                                                        placeholder="+91 00000 00000"
+                                                        value={formData.phone}
+                                                        onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                                                    />
                                                 </div>
                                             </div>
 
@@ -157,7 +232,11 @@ const BookAppointmentPage = () => {
                                                     <div className="absolute inset-y-0 left-0 pl-5 flex items-center pointer-events-none">
                                                         <Stethoscope className="w-5 h-5 text-gray-400 group-focus-within:text-[#AEE9F5] transition-colors" />
                                                     </div>
-                                                    <select className="w-full bg-[#FAFAFC] border border-gray-100 rounded-[24px] pl-14 pr-12 py-4 text-[#1A1A1A] font-bold focus:outline-none focus:border-[#AEE9F5] focus:ring-4 focus:ring-[#AEE9F5]/20 transition-all duration-300 appearance-none cursor-pointer">
+                                                    <select
+                                                        className="w-full bg-[#FAFAFC] border border-gray-100 rounded-[24px] pl-14 pr-12 py-4 text-[#1A1A1A] font-bold focus:outline-none focus:border-[#AEE9F5] focus:ring-4 focus:ring-[#AEE9F5]/20 transition-all duration-300 appearance-none cursor-pointer"
+                                                        value={formData.service}
+                                                        onChange={(e) => setFormData({ ...formData, service: e.target.value })}
+                                                    >
                                                         <option>General Consultation</option>
                                                         <option>Teeth Whitening</option>
                                                         <option>Dental Implants</option>
@@ -172,9 +251,63 @@ const BookAppointmentPage = () => {
                                             </div>
                                         </div>
 
+                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                            {/* Preferred Date */}
+                                            <div>
+                                                <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2 block pl-2">Preferred Date</label>
+                                                <div className="relative group">
+                                                    <div className="absolute inset-y-0 left-0 pl-5 flex items-center pointer-events-none">
+                                                        <Calendar className="w-5 h-5 text-gray-400 group-focus-within:text-[#AEE9F5] transition-colors" />
+                                                    </div>
+                                                    <input
+                                                        required
+                                                        type="date"
+                                                        className="w-full bg-[#FAFAFC] border border-gray-100 rounded-[24px] pl-14 pr-6 py-4 text-[#1A1A1A] font-bold focus:outline-none focus:border-[#AEE9F5] focus:ring-4 focus:ring-[#AEE9F5]/20 transition-all duration-300"
+                                                        value={formData.date}
+                                                        onChange={(e) => setFormData({ ...formData, date: e.target.value })}
+                                                    />
+                                                </div>
+                                            </div>
+
+                                            {/* Preferred Time */}
+                                            <div>
+                                                <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2 block pl-2">Preferred Time</label>
+                                                <div className="relative group">
+                                                    <div className="absolute inset-y-0 left-0 pl-5 flex items-center pointer-events-none">
+                                                        <Clock className="w-5 h-5 text-gray-400 group-focus-within:text-[#AEE9F5] transition-colors" />
+                                                    </div>
+                                                    <input
+                                                        required
+                                                        type="time"
+                                                        className="w-full bg-[#FAFAFC] border border-gray-100 rounded-[24px] pl-14 pr-6 py-4 text-[#1A1A1A] font-bold focus:outline-none focus:border-[#AEE9F5] focus:ring-4 focus:ring-[#AEE9F5]/20 transition-all duration-300"
+                                                        value={formData.time}
+                                                        onChange={(e) => setFormData({ ...formData, time: e.target.value })}
+                                                    />
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        {/* Message */}
+                                        <div>
+                                            <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2 block pl-2">Message (Optional)</label>
+                                            <div className="relative group">
+                                                <textarea
+                                                    rows={3}
+                                                    className="w-full bg-[#FAFAFC] border border-gray-100 rounded-[24px] px-6 py-4 text-[#1A1A1A] font-bold focus:outline-none focus:border-[#AEE9F5] focus:ring-4 focus:ring-[#AEE9F5]/20 transition-all duration-300 resize-none"
+                                                    placeholder="Tell us about your dental concerns..."
+                                                    value={formData.message}
+                                                    onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+                                                />
+                                            </div>
+                                        </div>
+
                                         <div className="pt-6">
-                                            <button type="submit" className="w-full bg-[#1A1A1A] text-white rounded-[24px] py-6 text-xl font-black hover:bg-[#AEE9F5] hover:text-[#1A1A1A] shadow-[0_20px_40px_rgba(26,26,26,0.15)] hover:shadow-[0_20px_50px_rgba(174,233,245,0.3)] transition-all duration-500 transform active:scale-95 group flex items-center justify-center gap-3">
-                                                Confirm Appointment
+                                            <button
+                                                type="submit"
+                                                disabled={isSubmitting}
+                                                className="w-full bg-[#1A1A1A] text-white rounded-[24px] py-6 text-xl font-black hover:bg-[#AEE9F5] hover:text-[#1A1A1A] shadow-[0_20px_40px_rgba(26,26,26,0.15)] hover:shadow-[0_20px_50px_rgba(174,233,245,0.3)] transition-all duration-500 transform active:scale-95 group flex items-center justify-center gap-3 disabled:opacity-50"
+                                            >
+                                                {isSubmitting ? "Confirming..." : "Confirm Appointment"}
                                                 <ArrowRight className="w-6 h-6 group-hover:translate-x-1 transition-transform" />
                                             </button>
                                         </div>
@@ -200,7 +333,7 @@ const BookAppointmentPage = () => {
                                             Thank you for choosing Parshwa Dental Clinic. Our team will contact you shortly to confirm your exact slot.
                                         </p>
                                         <button
-                                            onClick={() => setIsSubmitted(false)}
+                                            onClick={() => setSubmitStatus('idle')}
                                             className="mt-8 px-8 py-3 rounded-full bg-gray-100 text-[#1A1A1A] font-bold hover:bg-gray-200 transition-colors text-sm uppercase tracking-widest"
                                         >
                                             Book Another
@@ -219,7 +352,7 @@ const BookAppointmentPage = () => {
                 initial={{ opacity: 0, y: 40 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.5, duration: 1, ease: customEase }}
-                className="max-w-[1400px] mx-auto px-4 md:px-8 mt-24"
+                className="max-w-[1550px] mx-auto px-4 md:px-8 mt-24"
             >
                 <div className="w-full h-[450px] rounded-[48px] overflow-hidden border border-gray-100 shadow-[0_40px_100px_rgba(0,0,0,0.04)]">
                     <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d117469.46710991734!2d72.51171447868013!3d23.063363291353383!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x395e8324ecf42d25%3A0x6adc73eacbd4d770!2sParshwa%20Dental%20Clinic%20%23Dr%20Shrenik%20shah%20%23Dr%20Dimple%20shah!5e0!3m2!1sen!2sin!4v1773425366462!5m2!1sen!2sin" width="100%" height="100%" loading="lazy" ></iframe>

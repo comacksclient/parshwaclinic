@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { motion } from 'framer-motion';
+import { motion, Variants } from 'framer-motion';
 import {
     Phone,
     Clock,
@@ -17,14 +17,14 @@ import {
 import Link from 'next/link';
 
 // High-end Animation Variants
-const customEase = [0.22, 1, 0.36, 1];
+const customEase = [0.22, 1, 0.36, 1] as any;
 
-const fadeInUp = {
+const fadeInUp: Variants = {
     hidden: { opacity: 0, y: 40 },
     visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: customEase } }
 };
 
-const staggerContainer = {
+const staggerContainer: Variants = {
     hidden: { opacity: 0 },
     visible: { opacity: 1, transition: { staggerChildren: 0.15 } }
 };
@@ -68,7 +68,7 @@ const ForPatientsPage = () => {
             {/* Ambient Background Glows */}
             <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-[#AEE9F5]/30 rounded-full blur-[150px] pointer-events-none -translate-y-1/2 translate-x-1/3" />
 
-            <div className="max-w-[1400px] mx-auto px-4 md:px-8 relative z-10">
+            <div className="max-w-[1550px] mx-auto px-4 md:px-8 relative z-10">
 
                 {/* Hero Section */}
                 <motion.div

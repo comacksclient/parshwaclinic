@@ -21,7 +21,7 @@ export const viewport: Viewport = {
 export const metadata: Metadata = {
   metadataBase: new URL("https://www.parshwadental.com"),
   title: {
-    default: "Parshwa Dental Clinic | Best Dentist in Sabarmati, Ahmedabad",
+    default: "Best Dentist in Sabarmati, Ahmedabad",
     template: "%s | Parshwa Dental Clinic",
   },
   description:
@@ -33,8 +33,6 @@ export const metadata: Metadata = {
   },
   keywords: [
     "Parshwa Dental Clinic",
-    "Dr. Shrenik Shah",
-    "Dr. Dimple Shah",
     "Dentist in Sabarmati Ahmedabad",
     "Dental Clinic Chandkheda Ahmedabad",
     "Best Dentist Ahmedabad",
@@ -54,7 +52,7 @@ export const metadata: Metadata = {
 
 
 
-    // Broad "Near Me" (Google localizes these)
+
     "Dentist Near me",
     "Best Dental Clinic Near me",
 

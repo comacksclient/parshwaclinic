@@ -32,7 +32,7 @@ interface Message {
 }
 
 // Premium Easings
-const customEase = [0.22, 1, 0.36, 1];
+const customEase = [0.22, 1, 0.36, 1] as any;
 
 const WhatsAppIcon = () => (
     <svg viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6">
@@ -47,8 +47,8 @@ const TypingIndicator = () => (
         className="flex w-full justify-start mb-4"
     >
         <div className="flex max-w-[85%] gap-3 flex-row items-end">
-            <div className="w-8 h-8 rounded-[10px] flex-shrink-0 flex items-center justify-center bg-white border border-gray-100 shadow-sm overflow-hidden">
-                <img src="/parlogo.png" alt="Bot" className="w-5 h-5 object-contain" />
+            <div className="w-10 h-10 rounded-[20px] flex-shrink-0 flex items-center justify-center bg-white border border-gray-100 shadow-sm overflow-hidden p-0.5">
+                <img src="/parlogo.png" alt="Bot" className="w-full h-full object-contain" />
             </div>
             <div className="bg-white p-4 rounded-[24px] rounded-bl-sm shadow-[0_4px_20px_rgba(0,0,0,0.03)] border border-gray-100 flex gap-1.5 items-center">
                 <span className="w-2 h-2 bg-[#1A1A1A]/40 rounded-full animate-bounce"></span>
@@ -208,7 +208,7 @@ export function Chatbot() {
 
             const messageToSend = payload || text;
 
-            const response = await fetch(`/api/ask`, {
+            const response = await fetch(`/api/chat`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
@@ -262,23 +262,55 @@ export function Chatbot() {
 
     const handleBookingSubmit = async (e: React.FormEvent, fields: any[]) => {
         e.preventDefault();
-        const name = bookingFormData['name'];
-        const phone = bookingFormData['phone'];
 
-        if (!name || !phone) {
-            alert('Please fill in all fields');
+        // Basic validation
+        const missingFields = fields.filter(f => f.required && !bookingFormData[f.id]);
+        if (missingFields.length > 0) {
+            alert(`Please fill in: ${missingFields.map(f => f.label).join(', ')}`);
             return;
         }
 
-        const payload = `ACTION_SUBMIT_BOOKING_NAME_${name}_PHONE_${phone}`;
+        setIsLoading(true);
 
-        setMessages((prev) => [
-            ...prev,
-            { role: "user", content: `Confirmed details: ${name}, ${phone}` }
-        ]);
+        try {
+            // Map common field IDs to the specific ones expected by the Google Script
+            const payload = {
+                patientName: bookingFormData['name'] || bookingFormData['patientName'] || 'Patient',
+                phoneNumber: bookingFormData['phone'] || bookingFormData['phoneNumber'] || '',
+                bookingSource: 'Chatbot',
+                appointmentStatus: 'Pending Call',
+                ...bookingFormData // Include everything else just in case
+            };
 
-        setBookingFormData({});
-        handleSendMessage(`Confirmed details: ${name}, ${phone}`, false, payload);
+            const response = await fetch('/api/chatbook', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload),
+            });
+
+            const result = await response.json();
+
+            if (result.result === 'success') {
+                const name = bookingFormData['patientName'] || bookingFormData['name'] || 'Patient';
+                setMessages((prev) => [
+                    ...prev,
+                    { role: "user", content: `Booking request for ${name}` },
+                    { role: "assistant", type: "text", text: "Thank you! Your appointment request has been received. Our team will contact you shortly to confirm the time." }
+                ]);
+            } else {
+                throw new Error(result.message || 'Failed to submit');
+            }
+
+            setBookingFormData({});
+        } catch (error) {
+            console.error("Booking submission error:", error);
+            setMessages((prev) => [
+                ...prev,
+                { role: "assistant", content: " Sorry, I couldn't process your booking right now. Please call us at 088757 00500 for immediate assistance." }
+            ]);
+        } finally {
+            setIsLoading(false);
+        }
     };
 
     const renderContent = (msg: Message) => {
@@ -356,20 +388,20 @@ export function Chatbot() {
                         animate={{ opacity: 1, y: 0, scale: 1 }}
                         exit={{ opacity: 0, y: 20, scale: 0.95 }}
                         transition={{ duration: 0.4, ease: customEase }}
-                        className="absolute bottom-20 right-0 w-[calc(100vw-48px)] md:w-[420px] bg-white/80 backdrop-blur-2xl rounded-[40px] shadow-[0_40px_80px_rgba(0,0,0,0.15)] border border-white/40 overflow-hidden flex flex-col h-[700px] max-h-[85vh]"
+                        className="absolute bottom-20 right-0 w-[calc(100vw-48px)] md:w-[380px] bg-white/80 backdrop-blur-2xl rounded-[32px] shadow-[0_40px_80px_rgba(0,0,0,0.15)] border border-white/40 overflow-hidden flex flex-col h-[650px] max-h-[82vh]"
                     >
                         {/* Header */}
-                        <div className="bg-[#1A1A1A]/95 backdrop-blur-md p-5 flex items-center justify-between shrink-0 relative overflow-hidden border-b border-white/10">
-                            <div className="flex items-center gap-4 relative z-10">
+                        <div className="bg-[#1A1A1A]/95 backdrop-blur-md p-4 flex items-center justify-between shrink-0 relative overflow-hidden border-b border-white/10">
+                            <div className="flex items-center gap-3 relative z-10">
                                 <div className="relative">
-                                    <div className="w-12 h-12 rounded-[16px] bg-white flex items-center justify-center overflow-hidden">
+                                    <div className="w-12 h-12 rounded-[14px] bg-white flex items-center justify-center overflow-hidden shadow-sm p-1">
                                         <img src="/parlogo.png" alt="Bot" className="w-full h-full object-contain" />
                                     </div>
-                                    <div className="absolute -bottom-1 -right-1 w-3.5 h-3.5 bg-green-500 border-2 border-[#1A1A1A] rounded-full"></div>
+                                    <div className="absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 bg-green-500 border-2 border-[#1A1A1A] rounded-full"></div>
                                 </div>
                                 <div>
-                                    <h3 className="text-white font-black text-base tracking-tight">Parshwa Assistant</h3>
-                                    <p className="text-[#AEE9F5] font-bold text-[10px] uppercase tracking-widest opacity-80">Online • Replies instantly</p>
+                                    <h3 className="text-white font-black text-sm tracking-tight leading-tight">Parshwa Assistant</h3>
+                                    <p className="text-[#AEE9F5] font-bold text-[9px] uppercase tracking-widest opacity-80">Online • Replies instantly</p>
                                 </div>
                             </div>
                             <button
@@ -381,7 +413,7 @@ export function Chatbot() {
                         </div>
 
                         {/* Chat Body */}
-                        <div className="flex-1 p-5 overflow-y-auto flex flex-col gap-6 scrollbar-hide">
+                        <div className="flex-1 p-4 overflow-y-auto flex flex-col gap-4 scrollbar-hide">
                             {messages.map((msg, index) => (
                                 <motion.div
                                     initial={{ opacity: 0, y: 10 }}
@@ -390,20 +422,20 @@ export function Chatbot() {
                                     key={index}
                                     className={`flex w-full ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
                                 >
-                                    <div className={`flex max-w-[85%] gap-3 items-end ${msg.role === 'user' ? 'flex-row-reverse' : 'flex-row'}`}>
+                                    <div className={`flex max-w-[88%] gap-2.5 items-end ${msg.role === 'user' ? 'flex-row-reverse' : 'flex-row'}`}>
                                         <div className={`
-                                            w-8 h-8 rounded-[10px] flex-shrink-0 flex items-center justify-center shadow-sm overflow-hidden
+                                            w-9 h-9 rounded-[10px] flex-shrink-0 flex items-center justify-center shadow-sm overflow-hidden p-0.5
                                             ${msg.role === 'user' ? 'bg-[#AEE9F5] text-[#1A1A1A]' : 'bg-white border border-gray-100'}
                                         `}>
-                                            {msg.role === 'user' ? <User size={14} strokeWidth={3} /> : <img src="/parlogo.png" alt="Bot" className="w-5 h-5 object-contain" />}
+                                            {msg.role === 'user' ? <User size={14} strokeWidth={3} /> : <img src="/parlogo.png" alt="Bot" className="w-full h-full object-contain" />}
                                         </div>
 
                                         <div className="flex flex-col gap-1">
                                             <div className={`
-                                                p-5 text-sm leading-relaxed shadow-[0_4px_20px_rgba(0,0,0,0.03)]
+                                                p-4 text-[13px] leading-relaxed shadow-[0_4px_20px_rgba(0,0,0,0.03)]
                                                 ${msg.role === 'user'
-                                                    ? 'bg-[#1A1A1A] text-white rounded-[24px] rounded-br-sm'
-                                                    : 'bg-white/90 text-[#1A1A1A] border border-white rounded-[24px] rounded-bl-sm'
+                                                    ? 'bg-[#1A1A1A] text-white rounded-[20px] rounded-br-sm'
+                                                    : 'bg-white/90 text-[#1A1A1A] border border-white rounded-[20px] rounded-bl-sm'
                                                 }
                                             `}>
                                                 {renderContent(msg)}
@@ -421,22 +453,22 @@ export function Chatbot() {
                         </div>
 
                         {/* Input Area */}
-                        <div className="bg-white/50 backdrop-blur-md border-t border-white/20 shrink-0 p-4 rounded-b-[40px]">
-                            <form className="relative flex items-center gap-3" onSubmit={handleSubmit}>
+                        <div className="bg-white/50 backdrop-blur-md border-t border-white/20 shrink-0 p-3.5 rounded-b-[32px]">
+                            <form className="relative flex items-center gap-2.5" onSubmit={handleSubmit}>
                                 <input
                                     type="text"
                                     value={input}
                                     onChange={(e) => setInput(e.target.value)}
                                     placeholder="Ask me anything..."
                                     disabled={isLoading}
-                                    className="flex-1 bg-[#FAFAFC] border border-gray-100 rounded-full pl-6 pr-4 py-4 text-sm font-medium text-[#1A1A1A] focus:outline-none focus:border-[#AEE9F5] focus:ring-4 focus:ring-[#AEE9F5]/20 transition-all disabled:opacity-50"
+                                    className="flex-1 bg-[#FAFAFC] border border-gray-100 rounded-full pl-5 pr-4 py-3 text-sm font-medium text-[#1A1A1A] focus:outline-none focus:border-[#AEE9F5] focus:ring-4 focus:ring-[#AEE9F5]/20 transition-all disabled:opacity-50"
                                 />
                                 <button
                                     type="submit"
                                     disabled={!input.trim() || isLoading}
-                                    className="w-12 h-12 flex items-center justify-center bg-[#1A1A1A] rounded-full text-white hover:bg-[#AEE9F5] hover:text-[#1A1A1A] transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed shrink-0 shadow-md active:scale-95"
+                                    className="w-10 h-10 flex items-center justify-center bg-[#1A1A1A] rounded-full text-white hover:bg-[#AEE9F5] hover:text-[#1A1A1A] transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed shrink-0 shadow-md active:scale-95"
                                 >
-                                    <Send className="w-5 h-5 ml-1" />
+                                    <Send className="w-4 h-4 ml-0.5" />
                                 </button>
                             </form>
                             <div className="mt-3 text-center">
@@ -456,7 +488,7 @@ export function Chatbot() {
                     target="_blank"
                     rel="noopener noreferrer"
                     aria-label="Chat on WhatsApp"
-                    className="w-14 h-14 rounded-full bg-[#25D366] hover:bg-[#1da851] text-white shadow-[0_10px_20px_rgba(37,211,102,0.3)] transition-all hover:-translate-y-1 flex items-center justify-center"
+                    className="w-12 h-12 rounded-full bg-[#25D366] hover:bg-[#1da851] text-white shadow-[0_10px_20px_rgba(37,211,102,0.3)] transition-all hover:-translate-y-1 flex items-center justify-center"
                 >
                     <WhatsAppIcon />
                 </a>
@@ -464,13 +496,13 @@ export function Chatbot() {
 
             <button
                 onClick={() => setIsOpen(!isOpen)}
-                className="w-16 h-16 rounded-full bg-[#1A1A1A] hover:bg-[#AEE9F5] text-white hover:text-[#1A1A1A] shadow-[0_20px_40px_rgba(26,26,26,0.3)] transition-all duration-500 hover:-translate-y-1 flex items-center justify-center z-[100] relative group"
+                className="w-14 h-14 rounded-full bg-[#1A1A1A] hover:bg-[#AEE9F5] text-white hover:text-[#1A1A1A] shadow-[0_20px_40px_rgba(26,26,26,0.3)] transition-all duration-500 hover:-translate-y-1 flex items-center justify-center z-[100] relative group"
             >
                 <div className={`transition-all duration-500 absolute ${isOpen ? 'rotate-90 opacity-0 scale-50' : 'rotate-0 opacity-100 scale-100'}`}>
-                    <MessageCircle className="w-7 h-7" />
+                    <MessageCircle className="w-6 h-6" />
                 </div>
                 <div className={`transition-all duration-500 absolute ${isOpen ? 'rotate-0 opacity-100 scale-100' : '-rotate-90 opacity-0 scale-50'}`}>
-                    <X className="w-7 h-7" />
+                    <X className="w-6 h-6" />
                 </div>
 
                 {!isOpen && (
