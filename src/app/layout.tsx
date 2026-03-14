@@ -2,12 +2,16 @@ import type { Metadata, Viewport } from "next";
 import "./globals.css";
 
 import { Chatbot } from "@/components/chatbot";
-import { Plus_Jakarta_Sans } from "next/font/google";
+import { Unbounded } from "next/font/google";
 import Script from "next/script";
 import { Navbar } from "@/components/home/navbar";
 import { Footer } from "@/components/home/footer";
 
-const plusJakartaSans = Plus_Jakarta_Sans({ subsets: ["latin"] });
+const unbounded = Unbounded({
+  subsets: ["latin"],
+  display: "swap",
+
+});
 
 
 export const viewport: Viewport = {
@@ -27,9 +31,9 @@ export const metadata: Metadata = {
   description:
     "Top-rated dental clinic in Sabarmati, Ahmedabad (★5.0). Painless root canals, implants, braces & expert care by Dr. Shrenik Shah & Dr. Dimple Shah.",
   icons: {
-    icon: "/parlogo.png",
-    shortcut: "/parlogo.png",
-    apple: "/parlogo.png",
+    icon: "/lo.png",
+    shortcut: "/lo.png",
+    apple: "/lo.png",
   },
   keywords: [
     "Parshwa Dental Clinic",
@@ -89,7 +93,7 @@ export const metadata: Metadata = {
       "Looking for a trusted dentist in Ahmedabad? Parshwa Dental offers implants, braces, RCT & cosmetic dentistry. 5000+ Happy Patients.",
     images: [
       {
-        url: "/parlogo.png",
+        url: "/lo.png",
         width: 1200,
         height: 630,
         alt: "Parshwa Dental Clinic Ahmedabad",
@@ -101,7 +105,7 @@ export const metadata: Metadata = {
     title: "Parshwa Dental | Best Dentist in Sabarmati",
     description:
       "Compassionate, advanced dental care for the whole family in Sabarmati, Ahmedabad.",
-    images: ["/parlogo.png"],
+    images: ["/lo.png"],
   },
   other: {
     "geo.region": "IN-GJ",
@@ -115,7 +119,7 @@ const jsonLd = {
   "@context": "https://schema.org",
   "@type": "Dentist",
   "name": "Parshwa Dental Clinic",
-  "image": "https://parshwadental.com/parlogo.png",
+  "image": "/lo.png",
   "url": "https://parshwadental.com",
   "telephone": "+919328820346",
   "priceRange": "₹₹",
@@ -185,7 +189,7 @@ export default function RootLayout({
       </head>
 
 
-      <body className={`${plusJakartaSans.className} antialiased selection:bg-[#AEE9F5] selection:text-[#1A1A1A]`}>
+      <body className={`${unbounded.className} antialiased selection:bg-[#AEE9F5] selection:text-[#1A1A1A]`}>
 
 
 
