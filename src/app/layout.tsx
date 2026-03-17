@@ -2,12 +2,12 @@ import type { Metadata, Viewport } from "next";
 import "./globals.css";
 
 import { Chatbot } from "@/components/chatbot";
-import { Unbounded } from "next/font/google";
-import Script from "next/script";
+import { Space_Grotesk } from "next/font/google";
+
 import { Navbar } from "@/components/home/navbar";
 import { Footer } from "@/components/home/footer";
 
-const unbounded = Unbounded({
+const unbounded = Space_Grotesk({
   subsets: ["latin"],
   display: "swap",
 
